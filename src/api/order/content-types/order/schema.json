@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "shippingMethod": {
+      "type": "enumeration",
+      "enum": [
+        "normal",
+        "express",
+        "onSite"
+      ]
+    },
+    "standing": {
+      "type": "enumeration",
+      "default": "unpaid",
+      "enum": [
+        "unpaid",
+        "paid",
+        "shipped",
+        "arrived",
+        "completed"
+      ]
+    },
+    "address": {
+      "type": "component",
+      "component": "address.address",
+      "repeatable": false
+    }
+  }
+}

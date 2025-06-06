@@ -1,5 +1,20 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface AddressAddress extends Struct.ComponentSchema {
+  collectionName: 'components_address_addresses';
+  info: {
+    displayName: 'address';
+    icon: 'layout';
+  };
+  attributes: {
+    city: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    notes: Schema.Attribute.String;
+    postalCode: Schema.Attribute.String;
+    street: Schema.Attribute.Text;
+  };
+}
+
 export interface QuestionAnswerQuestionAnswer extends Struct.ComponentSchema {
   collectionName: 'components_question_answer_question_answers';
   info: {
@@ -91,6 +106,7 @@ export interface SocialMediaSocialMedia extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'address.address': AddressAddress;
       'question-answer.question-answer': QuestionAnswerQuestionAnswer;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;

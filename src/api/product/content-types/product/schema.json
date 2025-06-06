@@ -15,11 +15,11 @@
     }
   },
   "attributes": {
-    "price": {
-      "type": "decimal",
+    "name": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
-          "localized": false
+          "localized": true
         }
       }
     },
@@ -30,6 +30,23 @@
           "localized": true
         }
       }
+    },
+    "price": {
+      "type": "decimal",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "stock": {
+      "type": "integer",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      },
+      "min": 0
     },
     "media": {
       "type": "media",

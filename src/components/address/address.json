@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_address_addresses",
+  "info": {
+    "displayName": "address",
+    "icon": "layout"
+  },
+  "options": {},
+  "attributes": {
+    "street": {
+      "type": "text"
+    },
+    "postalCode": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
