@@ -42,6 +42,22 @@
       "type": "component",
       "component": "address.address",
       "repeatable": false
+    },
+    "totalPrice": {
+      "type": "decimal",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "stripeId": {
+      "type": "string",
+      "unique": true
     }
   }
 }
