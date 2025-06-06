@@ -1,5 +1,18 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface QuestionAnswerQuestionAnswer extends Struct.ComponentSchema {
+  collectionName: 'components_question_answer_question_answers';
+  info: {
+    displayName: 'question-answer';
+    icon: 'italic';
+  };
+  attributes: {
+    answer: Schema.Attribute.Text;
+    question: Schema.Attribute.Text;
+    type: Schema.Attribute.Enumeration<['shipping', 'payment']>;
+  };
+}
+
 export interface SharedMedia extends Struct.ComponentSchema {
   collectionName: 'components_shared_media';
   info: {
@@ -62,14 +75,29 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SocialMediaSocialMedia extends Struct.ComponentSchema {
+  collectionName: 'components_social_media_social_medias';
+  info: {
+    displayName: 'socialMedia';
+    icon: 'twitter';
+  };
+  attributes: {
+    icon: Schema.Attribute.Media<'images' | 'files'>;
+    link: Schema.Attribute.String;
+    platform: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'question-answer.question-answer': QuestionAnswerQuestionAnswer;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'social-media.social-media': SocialMediaSocialMedia;
     }
   }
 }

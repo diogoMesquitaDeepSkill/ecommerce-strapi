@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_question_answer_question_answers",
+  "info": {
+    "displayName": "question-answer",
+    "icon": "italic"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "text"
+    },
+    "answer": {
+      "type": "text"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "shipping",
+        "payment"
+      ]
+    }
+  },
+  "config": {}
+}

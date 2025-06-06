@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_social_media_social_medias",
+  "info": {
+    "displayName": "socialMedia",
+    "icon": "twitter"
+  },
+  "options": {},
+  "attributes": {
+    "platform": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    }
+  },
+  "config": {}
+}
