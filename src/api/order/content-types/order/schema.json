@@ -58,6 +58,9 @@
     "stripeId": {
       "type": "string",
       "unique": true
+    },
+    "trackingCode": {
+      "type": "string"
     }
   }
 }
