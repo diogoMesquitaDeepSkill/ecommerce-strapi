@@ -41,15 +41,21 @@ export default factories.createCoreService(
           };
         });
 
+        // Get locale from the first product (assuming all products have the same locale)
+        const locale = order.orderItems[0]?.product?.locale || "pt";
+
         const session = await stripe.checkout.sessions.create({
           payment_method_types: ["card"],
           line_items: lineItems,
           mode: "payment",
-          success_url: `${process.env.FRONTEND_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${process.env.FRONTEND_URL}/order/canceled`,
+          locale: locale, // Set Stripe checkout locale
+          success_url: `${process.env.FRONTEND_URL}/${locale}/order/access-token/${order.accessToken}`,
+          cancel_url: `${process.env.FRONTEND_URL}/${locale}/order/canceled/access-token/${order.accessToken}`,
           customer_email: order.email,
           metadata: {
             orderId: order.id.toString(),
+            accessToken: order.accessToken,
+            locale: locale,
           },
         });
 
@@ -80,7 +86,7 @@ export default factories.createCoreService(
       if (event.type === "checkout.session.completed") {
         const session = event.data.object;
 
-        // Update the order
+        // Update the order using accessToken for better security
         await strapi.documents("api::order.order").update({
           documentId: session.metadata.orderId,
           data: {

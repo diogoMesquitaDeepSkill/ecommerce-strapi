@@ -580,12 +580,12 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Required;
     standing: Schema.Attribute.Enumeration<
-      ['unpaid', 'paid', 'shipped', 'arrived', 'completed']
+      ['unpaid', 'paid', 'shipped', 'problem', 'completed', 'canceled']
     > &
       Schema.Attribute.DefaultTo<'unpaid'>;
     stripeId: Schema.Attribute.String & Schema.Attribute.Unique;
     totalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    trackingCode: Schema.Attribute.String;
+    trackingLink: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
