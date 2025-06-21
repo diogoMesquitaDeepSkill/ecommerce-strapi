@@ -10,22 +10,61 @@ export default factories.createCoreController(
     async create(ctx) {
       const { data } = ctx.request.body;
 
-      // Set the date to current time
-      data.date = new Date();
+      try {
+        // Calculate total price from products
+        let totalPrice = 0;
+        if (data.products && data.products.length > 0) {
+          for (const productId of data.products) {
+            const product = await strapi
+              .documents("api::product.product")
+              .findOne({
+                documentId: productId.toString(),
+              });
 
-      // Create the order
-      const order = await super.create(ctx);
+            if (product && product.price) {
+              totalPrice += parseFloat(product.price.toString());
+            }
+          }
+        }
 
-      // Create Stripe checkout session
-      const stripeSession = await strapi
-        .service("api::order.stripe")
-        .createPaymentSession(order.data);
+        // Generate unique access token (using timestamp + random string)
+        const timestamp = Date.now();
+        const randomString = Math.random().toString(36).substring(2, 15);
+        const accessToken = `order_${timestamp}_${randomString}`;
 
-      // Return both the order and the Stripe session URL
-      return {
-        order: order.data,
-        stripeUrl: stripeSession.url,
-      };
+        // Prepare order data
+        const orderData = {
+          name: data.name,
+          email: data.email,
+          products: data.products,
+          shippingMethod: data.shippingMethod,
+          address: data.address,
+          phoneNumber: data.phoneNumber, // optional
+          totalPrice: totalPrice,
+          date: new Date(),
+          accessToken: accessToken,
+          standing: "unpaid" as const, // default value with proper type
+        };
+
+        // Create the order using strapi.documents
+        const order = await strapi.documents("api::order.order").create({
+          data: orderData,
+        });
+
+        // Create Stripe checkout session
+        const stripeSession = await strapi
+          .service("api::order.stripe")
+          .createPaymentSession(order);
+
+        // Return both the order and the Stripe session URL
+        return {
+          order: order,
+          stripeUrl: stripeSession.url,
+        };
+      } catch (error) {
+        console.error("Error creating order:", error);
+        ctx.throw(400, error.message);
+      }
     },
 
     async webhook(ctx) {

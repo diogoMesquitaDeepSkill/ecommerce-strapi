@@ -557,21 +557,27 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    address: Schema.Attribute.Component<'address.address', false>;
+    accessToken: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    address: Schema.Attribute.Component<'address.address', false> &
+      Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     date: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    email: Schema.Attribute.Email;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    phoneNumber: Schema.Attribute.String;
     products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
     shippingMethod: Schema.Attribute.Enumeration<
       ['normal', 'express', 'onSite']
-    >;
+    > &
+      Schema.Attribute.Required;
     standing: Schema.Attribute.Enumeration<
       ['unpaid', 'paid', 'shipped', 'arrived', 'completed']
     > &

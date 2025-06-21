@@ -12,7 +12,8 @@
   "pluginOptions": {},
   "attributes": {
     "email": {
-      "type": "email"
+      "type": "email",
+      "required": true
     },
     "products": {
       "type": "relation",
@@ -21,6 +22,7 @@
     },
     "shippingMethod": {
       "type": "enumeration",
+      "required": true,
       "enum": [
         "normal",
         "express",
@@ -41,7 +43,8 @@
     "address": {
       "type": "component",
       "component": "address.address",
-      "repeatable": false
+      "repeatable": false,
+      "required": true
     },
     "totalPrice": {
       "type": "decimal",
@@ -60,6 +63,14 @@
       "unique": true
     },
     "trackingCode": {
+      "type": "string"
+    },
+    "accessToken": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "phoneNumber": {
       "type": "string"
     }
   }
