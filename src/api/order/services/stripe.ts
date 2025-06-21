@@ -10,7 +10,8 @@ export default factories.createCoreService(
           apiVersion: "2025-05-28.basil" as const,
         });
 
-        const lineItems = order.products.map((product) => {
+        const lineItems = order.orderItems.map((item) => {
+          const product = item.product;
           // Convert richtext description to plain text (remove markdown/HTML tags)
           let description = "";
           if (product.description && typeof product.description === "string") {
@@ -36,7 +37,7 @@ export default factories.createCoreService(
                 parseFloat(product.price.toString()) * 100
               ), // Stripe expects amounts in cents
             },
-            quantity: 1,
+            quantity: item.quantity || 1,
           };
         });
 

@@ -15,30 +15,21 @@
       "type": "email",
       "required": true
     },
-    "products": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product.product"
+    "orderItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "order-item.order-item",
+      "required": true
     },
     "shippingMethod": {
       "type": "enumeration",
       "required": true,
-      "enum": [
-        "normal",
-        "express",
-        "onSite"
-      ]
+      "enum": ["normal", "express", "onSite"]
     },
     "standing": {
       "type": "enumeration",
       "default": "unpaid",
-      "enum": [
-        "unpaid",
-        "paid",
-        "shipped",
-        "arrived",
-        "completed"
-      ]
+      "enum": ["unpaid", "paid", "shipped", "arrived", "completed"]
     },
     "address": {
       "type": "component",

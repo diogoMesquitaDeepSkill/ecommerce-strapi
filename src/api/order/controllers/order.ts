@@ -11,18 +11,18 @@ export default factories.createCoreController(
       const { data } = ctx.request.body;
 
       try {
-        // Calculate total price from products
+        // Calculate total price from orderItems
         let totalPrice = 0;
-        if (data.products && data.products.length > 0) {
-          for (const productId of data.products) {
+        if (data.orderItems && data.orderItems.length > 0) {
+          for (const item of data.orderItems) {
             const product = await strapi
               .documents("api::product.product")
               .findOne({
-                documentId: productId.toString(),
+                documentId: item.product.toString(),
               });
-
             if (product && product.price) {
-              totalPrice += parseFloat(product.price.toString());
+              totalPrice +=
+                parseFloat(product.price.toString()) * (item.quantity || 1);
             }
           }
         }
@@ -36,7 +36,7 @@ export default factories.createCoreController(
         const orderData = {
           name: data.name,
           email: data.email,
-          products: data.products,
+          orderItems: data.orderItems,
           shippingMethod: data.shippingMethod,
           address: data.address,
           phoneNumber: data.phoneNumber, // optional
@@ -49,9 +49,7 @@ export default factories.createCoreController(
         // Create the order using strapi.documents
         const order = await strapi.documents("api::order.order").create({
           data: orderData,
-          populate: {
-            products: true,
-          },
+          populate: ["orderItems.product"],
         });
 
         // Create Stripe checkout session
