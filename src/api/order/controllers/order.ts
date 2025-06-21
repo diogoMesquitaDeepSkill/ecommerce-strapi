@@ -3,7 +3,6 @@
  */
 
 import { factories } from "@strapi/strapi";
-import { translateOrderStatus } from "../services/translations";
 
 export default factories.createCoreController(
   "api::order.order",
@@ -91,16 +90,7 @@ export default factories.createCoreController(
 
         const order = orders[0];
 
-        // Get locale from the first product or default to 'en'
-        const locale = order.orderItems[0]?.product?.locale || "en";
-
-        // Add translated status
-        const orderWithTranslation = {
-          ...order,
-          standingTranslated: translateOrderStatus(order.standing, locale),
-        };
-
-        return { order: orderWithTranslation };
+        return { order: order };
       } catch (error) {
         console.error("Error finding order by token:", error);
         ctx.throw(400, error.message);
