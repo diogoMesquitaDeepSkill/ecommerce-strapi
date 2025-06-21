@@ -5,47 +5,62 @@ export default factories.createCoreService(
   "api::order.order",
   ({ strapi }) => ({
     async createPaymentSession(order) {
-      const stripe = new Stripe(strapi.config.get("stripe.secretKey"), {
-        apiVersion: "2025-05-28.basil" as const,
-      });
+      try {
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+          apiVersion: "2025-05-28.basil" as const,
+        });
 
-      const lineItems = await Promise.all(
-        order.products.map(async (productId) => {
-          const product = await strapi.entityService.findOne(
-            "api::product.product",
-            productId
-          );
+        const lineItems = order.products.map((product) => {
+          // Convert richtext description to plain text (remove markdown/HTML tags)
+          let description = "";
+          if (product.description && typeof product.description === "string") {
+            // Remove markdown formatting and HTML tags
+            description = product.description
+              .replace(/#{1,6}\s+/g, "") // Remove headers
+              .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold
+              .replace(/\*(.*?)\*/g, "$1") // Remove italic
+              .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Remove links, keep text
+              .replace(/<[^>]*>/g, "") // Remove HTML tags
+              .replace(/\n+/g, " ") // Replace newlines with spaces
+              .trim();
+          }
+
           return {
             price_data: {
               currency: "eur",
               product_data: {
-                name: product.name,
-                description: product.description,
+                name: product.name || "Product",
+                description: description || "No description available",
               },
-              unit_amount: Math.round(product.price * 100), // Stripe expects amounts in cents
+              unit_amount: Math.round(
+                parseFloat(product.price.toString()) * 100
+              ), // Stripe expects amounts in cents
             },
             quantity: 1,
           };
-        })
-      );
+        });
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: lineItems,
-        mode: "payment",
-        success_url: `${process.env.FRONTEND_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.FRONTEND_URL}/order/canceled`,
-        customer_email: order.email,
-        metadata: {
-          orderId: order.id.toString(),
-        },
-      });
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: lineItems,
+          mode: "payment",
+          success_url: `${process.env.FRONTEND_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${process.env.FRONTEND_URL}/order/canceled`,
+          customer_email: order.email,
+          metadata: {
+            orderId: order.id.toString(),
+          },
+        });
 
-      return session;
+        return session;
+      } catch (error) {
+        console.error("Error creating Stripe session:", error);
+        throw new Error(`Failed to create payment session: ${error.message}`);
+      }
     },
 
     async handleStripeWebhook(requestBody, signature) {
-      const stripe = new Stripe(strapi.config.get("stripe.secretKey"), {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
         apiVersion: "2025-05-28.basil" as const,
       });
 
@@ -55,7 +70,7 @@ export default factories.createCoreService(
         event = stripe.webhooks.constructEvent(
           requestBody,
           signature,
-          strapi.config.get("stripe.webhookSecret")
+          process.env.STRIPE_WEBHOOK_SECRET!
         );
       } catch (err) {
         throw new Error(`Webhook Error: ${err.message}`);

@@ -49,6 +49,9 @@ export default factories.createCoreController(
         // Create the order using strapi.documents
         const order = await strapi.documents("api::order.order").create({
           data: orderData,
+          populate: {
+            products: true,
+          },
         });
 
         // Create Stripe checkout session
