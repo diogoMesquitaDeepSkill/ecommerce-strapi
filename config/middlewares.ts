@@ -7,7 +7,11 @@ export default [
     config: {
       enabled: true,
       headers: "*",
-      origin: ["http://localhost:1337", "http://localhost:3000"],
+      origin: [
+        "http://localhost:1337",
+        "http://localhost:3000",
+        process.env.FRONTEND_URL,
+      ],
     },
   },
   "strapi::poweredBy",
