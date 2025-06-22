@@ -50,7 +50,7 @@ export default factories.createCoreService(
           mode: "payment",
           locale: locale, // Set Stripe checkout locale
           success_url: `${process.env.FRONTEND_URL}/${locale}/order/access-token/${order.accessToken}`,
-          cancel_url: `${process.env.FRONTEND_URL}/${locale}/order/canceled/access-token/${order.accessToken}`,
+          cancel_url: `${process.env.FRONTEND_URL}/${locale}/order/canceled/${order.accessToken}`,
           customer_email: order.email,
           metadata: {
             orderId: order.id.toString(),

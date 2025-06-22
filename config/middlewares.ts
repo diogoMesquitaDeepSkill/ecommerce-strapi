@@ -10,7 +10,6 @@ export default [
       origin: [
         "http://localhost:1337",
         "http://localhost:3000",
-        "https://ecommerce-shop-dun-five.vercel.app",
         process.env.FRONTEND_URL,
       ].filter(Boolean),
     },
