@@ -18,7 +18,7 @@ export default {
       // 'nl',
       // 'no',
       // 'pl',
-      // 'pt-BR',
+      "pt-BR",
       "pt",
       // 'ru',
       // 'sk',
