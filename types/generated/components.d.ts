@@ -15,6 +15,27 @@ export interface AddressAddress extends Struct.ComponentSchema {
   };
 }
 
+export interface OrderItemOrderItem extends Struct.ComponentSchema {
+  collectionName: 'components_order_item_order_items';
+  info: {
+    description: 'An item in an order, with product and quantity.';
+    displayName: 'Order Item';
+    icon: 'shopping-cart';
+  };
+  attributes: {
+    product: Schema.Attribute.Relation<'oneToOne', 'api::product.product'> &
+      Schema.Attribute.Required;
+    quantity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+  };
+}
+
 export interface QuestionAnswerQuestionAnswer extends Struct.ComponentSchema {
   collectionName: 'components_question_answer_question_answers';
   info: {
@@ -107,6 +128,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'address.address': AddressAddress;
+      'order-item.order-item': OrderItemOrderItem;
       'question-answer.question-answer': QuestionAnswerQuestionAnswer;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;

@@ -12,15 +12,18 @@
   "pluginOptions": {},
   "attributes": {
     "email": {
-      "type": "email"
+      "type": "email",
+      "required": true
     },
-    "products": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product.product"
+    "orderItems": {
+      "type": "component",
+      "component": "order-item.order-item",
+      "repeatable": true,
+      "required": true
     },
     "shippingMethod": {
       "type": "enumeration",
+      "required": true,
       "enum": [
         "normal",
         "express",
@@ -34,14 +37,43 @@
         "unpaid",
         "paid",
         "shipped",
-        "arrived",
-        "completed"
+        "problem",
+        "completed",
+        "canceled"
       ]
     },
     "address": {
       "type": "component",
       "component": "address.address",
-      "repeatable": false
+      "repeatable": false,
+      "required": true
+    },
+    "totalPrice": {
+      "type": "decimal",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "stripeId": {
+      "type": "string",
+      "unique": true
+    },
+    "trackingLink": {
+      "type": "string"
+    },
+    "accessToken": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "phoneNumber": {
+      "type": "string"
     }
   }
 }

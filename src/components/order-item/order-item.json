@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_order_item_order_items",
+  "info": {
+    "displayName": "Order Item",
+    "icon": "shopping-cart",
+    "description": "An item in an order, with product and quantity."
+  },
+  "options": {},
+  "attributes": {
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product",
+      "required": true
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    }
+  }
+}
