@@ -57,6 +57,14 @@ export default factories.createCoreController(
           .service("api::order.stripe")
           .createPaymentSession(order);
 
+        // Update the order with the Stripe session ID
+        await strapi.documents("api::order.order").update({
+          documentId: order.id.toString(),
+          data: {
+            stripeId: stripeSession.id,
+          },
+        });
+
         // Return both the order and the Stripe session URL
         return {
           order: order,

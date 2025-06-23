@@ -94,6 +94,9 @@ export default factories.createCoreService(
             stripeId: session.id,
           },
         });
+
+        // Note: The email will be sent automatically by the lifecycle hook
+        // when the standing is updated to "paid"
       }
 
       return { received: true };
