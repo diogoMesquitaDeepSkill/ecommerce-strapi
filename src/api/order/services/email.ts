@@ -1,4 +1,5 @@
 import { factories } from "@strapi/strapi";
+import { getEmailTemplates } from "./email-templates";
 
 export default factories.createCoreService(
   "api::order.order",
@@ -27,9 +28,11 @@ export default factories.createCoreService(
         const locale = order.orderItems[0]?.product?.locale || "pt";
 
         // Get email templates based on locale
-        const templates = await this.getEmailTemplates(locale);
+        const templates = getEmailTemplates(locale);
 
-        console.log("BREVO_API_KEY exists:", process.env.BREVO_API_KEY);
+        // Get website URL
+        const websiteUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const contactUrl = `${websiteUrl}/${locale}/contact`;
 
         // Format order items for email
         const orderItemsHtml = order.orderItems
@@ -103,9 +106,19 @@ export default factories.createCoreService(
               
               <p>${templates.orderConfirmation.footer}</p>
               
-              <p style="margin-top: 30px; font-size: 12px; color: #666;">
-                ${templates.orderConfirmation.contactInfo}
-              </p>
+              <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+                <p style="margin: 0 0 15px 0; font-size: 14px; color: #666;">
+                  ${templates.orderConfirmation.contactInfo}
+                </p>
+                <div style="text-align: center;">
+                  <a href="${websiteUrl}" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                    ${templates.orderConfirmation.website}
+                  </a>
+                  <a href="${contactUrl}" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+                    ${templates.orderConfirmation.support}
+                  </a>
+                </div>
+              </div>
             </div>
           </body>
           </html>
@@ -157,7 +170,11 @@ export default factories.createCoreService(
         const locale = order.orderItems[0]?.product?.locale || "pt";
 
         // Get email templates based on locale
-        const templates = await this.getEmailTemplates(locale);
+        const templates = getEmailTemplates(locale);
+
+        // Get website URL
+        const websiteUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const contactUrl = `${websiteUrl}/${locale}/contact`;
 
         // Format order items for email
         const orderItemsHtml = order.orderItems
@@ -222,9 +239,19 @@ export default factories.createCoreService(
               
               <p>${templates.orderShipped.footer}</p>
               
-              <p style="margin-top: 30px; font-size: 12px; color: #666;">
-                ${templates.orderShipped.contactInfo}
-              </p>
+              <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+                <p style="margin: 0 0 15px 0; font-size: 14px; color: #666;">
+                  ${templates.orderShipped.contactInfo}
+                </p>
+                <div style="text-align: center;">
+                  <a href="${websiteUrl}" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                    ${templates.orderShipped.website}
+                  </a>
+                  <a href="${contactUrl}" style="display: inline-block; margin: 0 10px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+                    ${templates.orderShipped.support}
+                  </a>
+                </div>
+              </div>
             </div>
           </body>
           </html>
@@ -243,85 +270,6 @@ export default factories.createCoreService(
         console.error("Error sending order shipped email:", error);
         throw new Error(`Failed to send order shipped email: ${error.message}`);
       }
-    },
-
-    async getEmailTemplates(locale) {
-      // Email templates for different locales
-      const templates = {
-        pt: {
-          orderConfirmation: {
-            subject: "Confirmação do Pedido - Seu Pedido Foi Recebido",
-            greeting: "Olá {name},",
-            message:
-              "Obrigado pelo seu pedido! Recebemos o seu pedido e está sendo processado.",
-            orderDetails: "Detalhes do Pedido",
-            orderNumber: "Número do Pedido",
-            orderDate: "Data do Pedido",
-            totalAmount: "Valor Total",
-            items: "Itens Encomendados",
-            product: "Produto",
-            price: "Preço",
-            shippingAddress: "Endereço de Entrega",
-            footer: "Enviaremos um email assim que o seu pedido for enviado.",
-            contactInfo:
-              "Se tiver alguma dúvida, entre em contacto com a nossa equipa de apoio.",
-          },
-          orderShipped: {
-            subject: "Seu Pedido Foi Enviado!",
-            greeting: "Olá {name},",
-            message:
-              "Ótimas notícias! O seu pedido foi enviado e está a caminho.",
-            orderDetails: "Detalhes do Pedido",
-            orderNumber: "Número do Pedido",
-            orderDate: "Data do Pedido",
-            items: "Itens Enviados",
-            trackingInfo: "Informações de Rastreamento",
-            trackPackage: "Rastrear o Seu Pacote",
-            footer:
-              "O seu pedido deve chegar dentro do tempo de entrega estimado.",
-            contactInfo:
-              "Se tiver alguma dúvida sobre a sua entrega, entre em contacto com a nossa equipa de apoio.",
-          },
-        },
-        en: {
-          orderConfirmation: {
-            subject: "Order Confirmation - Your Order Has Been Received",
-            greeting: "Hello {name},",
-            message:
-              "Thank you for your order! We have received your order and it is being processed.",
-            orderDetails: "Order Details",
-            orderNumber: "Order Number",
-            orderDate: "Order Date",
-            totalAmount: "Total Amount",
-            items: "Items Ordered",
-            product: "Product",
-            price: "Price",
-            shippingAddress: "Shipping Address",
-            footer:
-              "We will send you an email once your order has been shipped.",
-            contactInfo:
-              "If you have any questions, please contact our support team.",
-          },
-          orderShipped: {
-            subject: "Your Order Has Been Shipped!",
-            greeting: "Hello {name},",
-            message:
-              "Great news! Your order has been shipped and is on its way to you.",
-            orderDetails: "Order Details",
-            orderNumber: "Order Number",
-            orderDate: "Order Date",
-            items: "Items Shipped",
-            trackingInfo: "Tracking Information",
-            trackPackage: "Track Your Package",
-            footer:
-              "Your order should arrive within the estimated delivery time.",
-            contactInfo:
-              "If you have any questions about your shipment, please contact our support team.",
-          },
-        },
-      };
-
-      return templates[locale] || templates.en; // Default to English if locale not found
     },
   })
 );
