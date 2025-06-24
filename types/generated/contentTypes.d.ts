@@ -396,6 +396,8 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    nameFR: Schema.Attribute.String;
+    namePT: Schema.Attribute.String;
     products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> &

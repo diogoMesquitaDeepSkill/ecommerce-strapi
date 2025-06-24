@@ -15,6 +15,12 @@
     "name": {
       "type": "string"
     },
+    "namePT": {
+      "type": "string"
+    },
+    "nameFR": {
+      "type": "string"
+    },
     "slug": {
       "type": "uid",
       "targetField": "name",
