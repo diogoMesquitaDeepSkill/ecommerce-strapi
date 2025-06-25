@@ -20,6 +20,19 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
         return ctx.badRequest('Invalid email format');
       }
 
+      // Validate phone format if provided
+      if (data.phone) {
+        // Remove all non-digit and non-plus characters for validation
+        const cleanPhone = data.phone.replace(/[^\d+]/g, '');
+        
+        // Check if it contains only digits and optionally starts with +
+        const phoneRegex = /^\+?[\d]{7,20}$/;
+        
+        if (!phoneRegex.test(cleanPhone)) {
+          return ctx.badRequest('Invalid phone number format. Please enter a valid phone number with 7-20 digits.');
+        }
+      }
+
       // Get support email from environment variable
       const supportEmail = process.env.EMAIL_SUPPORT;
       if (!supportEmail) {
@@ -41,25 +54,32 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
           <meta charset="utf-8">
           <title>${templates.subject}</title>
         </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #2c3e50;">${templates.subject}</h1>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
+            <h1 style="color: #2c3e50; margin-bottom: 30px; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+              ${templates.subject}
+            </h1>
             
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-              <h3>${templates.contactDetails}</h3>
-              <p><strong>${templates.name}:</strong> ${data.firstName} ${data.lastName}</p>
-              <p><strong>${templates.email}:</strong> ${data.email}</p>
-              <p><strong>${templates.subjectLabel}:</strong> ${data.subject}</p>
-              ${data.orderId ? `<p><strong>${templates.orderId}:</strong> ${data.orderId}</p>` : ''}
+            <div style="background: #f8f9fa; padding: 20px; border-left: 4px solid #3498db; margin: 20px 0; border-radius: 0 5px 5px 0;">
+              <h3 style="margin-top: 0; color: #2c3e50;">${templates.contactDetails}</h3>
+              <p style="margin: 8px 0;"><strong>${templates.name}:</strong> ${data.firstName} ${data.lastName}</p>
+              <p style="margin: 8px 0;"><strong>${templates.email}:</strong> <a href="mailto:${data.email}" style="color: #3498db;">${data.email}</a></p>
+              ${data.phone ? `<p style="margin: 8px 0;"><strong>${templates.phone}:</strong> <a href="tel:${data.phone}" style="color: #3498db;">${data.phone}</a></p>` : ''}
+              <p style="margin: 8px 0;"><strong>${templates.subjectLabel}:</strong> ${data.subject}</p>
+              ${data.orderId ? `<p style="margin: 8px 0;"><strong>${templates.orderId}:</strong> ${data.orderId}</p>` : ''}
             </div>
             
-            <h3>${templates.messageLabel}</h3>
-            <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 5px; margin: 20px 0;">
-              <p style="white-space: pre-wrap;">${data.message}</p>
+            <div style="margin: 30px 0;">
+              <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 18px;">${templates.messageLabel}</h3>
+              <div style="background: #ffffff; padding: 25px; border: 2px solid #e9ecef; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: #2c3e50;">
+                  ${data.message}
+                </div>
+              </div>
             </div>
             
-            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
-              <p style="margin: 0; font-size: 14px; color: #666;">
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-top: 3px solid #95a5a6;">
+              <p style="margin: 0; font-size: 14px; color: #666; text-align: center;">
                 ${templates.footer}
               </p>
             </div>
@@ -84,25 +104,38 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
           <meta charset="utf-8">
           <title>${templates.confirmationSubject}</title>
         </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #2c3e50;">${templates.confirmationSubject}</h1>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
+            <h1 style="color: #2c3e50; margin-bottom: 30px; border-bottom: 2px solid #27ae60; padding-bottom: 10px;">
+              ${templates.confirmationSubject}
+            </h1>
             
-            <p>${templates.confirmationGreeting.replace('{name}', data.firstName)}</p>
+            <p style="font-size: 16px; margin-bottom: 20px;">
+              ${templates.confirmationGreeting.replace('{name}', data.firstName)}
+            </p>
             
-            <p>${templates.confirmationMessage}</p>
+            <p style="font-size: 16px; margin-bottom: 30px;">
+              ${templates.confirmationMessage}
+            </p>
             
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-              <h3>${templates.yourMessage}</h3>
-              <p><strong>${templates.subjectLabel}:</strong> ${data.subject}</p>
-              ${data.orderId ? `<p><strong>${templates.orderId}:</strong> ${data.orderId}</p>` : ''}
-              <p><strong>${templates.messageLabel}:</strong></p>
-              <div style="background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0;">
-                <p style="white-space: pre-wrap;">${data.message}</p>
+            <div style="background: #f8f9fa; padding: 20px; border-left: 4px solid #27ae60; margin: 20px 0; border-radius: 0 5px 5px 0;">
+              <h3 style="margin-top: 0; color: #2c3e50;">${templates.yourMessage}</h3>
+              <p style="margin: 8px 0;"><strong>${templates.subjectLabel}:</strong> ${data.subject}</p>
+              ${data.orderId ? `<p style="margin: 8px 0;"><strong>${templates.orderId}:</strong> ${data.orderId}</p>` : ''}
+              ${data.phone ? `<p style="margin: 8px 0;"><strong>${templates.phone}:</strong> ${data.phone}</p>` : ''}
+              <p style="margin: 15px 0 10px 0;"><strong>${templates.messageLabel}:</strong></p>
+              <div style="background: #ffffff; padding: 20px; border: 2px solid #e9ecef; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: #2c3e50;">
+                  ${data.message}
+                </div>
               </div>
             </div>
             
-            <p>${templates.confirmationFooter}</p>
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-top: 3px solid #95a5a6;">
+              <p style="margin: 0; font-size: 14px; color: #666; text-align: center;">
+                ${templates.confirmationFooter}
+              </p>
+            </div>
           </div>
         </body>
         </html>
@@ -133,6 +166,7 @@ const contactEmailTemplates = {
     contactDetails: 'Contact Details',
     name: 'Name',
     email: 'Email',
+    phone: 'Phone',
     subjectLabel: 'Subject',
     orderId: 'Order ID',
     messageLabel: 'Message',
@@ -149,6 +183,7 @@ const contactEmailTemplates = {
     contactDetails: 'Detalhes de Contacto',
     name: 'Nome',
     email: 'Email',
+    phone: 'Telefone',
     subjectLabel: 'Assunto',
     orderId: 'ID da Encomenda',
     messageLabel: 'Mensagem',
@@ -165,6 +200,7 @@ const contactEmailTemplates = {
     contactDetails: 'Détails de Contact',
     name: 'Nom',
     email: 'Email',
+    phone: 'Téléphone',
     subjectLabel: 'Sujet',
     orderId: 'ID de Commande',
     messageLabel: 'Message',
