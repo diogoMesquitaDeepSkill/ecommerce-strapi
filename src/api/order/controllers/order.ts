@@ -59,7 +59,7 @@ export default factories.createCoreController(
 
         // Update the order with the Stripe session ID
         await strapi.documents("api::order.order").update({
-          documentId: order.id.toString(),
+          documentId: order.documentId.toString(),
           data: {
             stripeId: stripeSession.id,
           },
