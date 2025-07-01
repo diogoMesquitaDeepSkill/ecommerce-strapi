@@ -110,13 +110,25 @@ export default factories.createCoreController(
         // Get the signature from the headers
         const signature = ctx.request.headers["stripe-signature"];
 
+        // Get the unparsed body for Stripe signature verification
+        // In Strapi 5, the unparsed body should be available when includeUnparsed is true
+        const unparsedBody = (ctx.request as any).body?.[Symbol.for("unparsedBody")] || ctx.request.body;
+
+        console.log("Webhook received:", {
+          hasSignature: !!signature,
+          bodyType: typeof unparsedBody,
+          isBuffer: Buffer.isBuffer(unparsedBody),
+          bodyLength: unparsedBody?.length || 0
+        });
+
         // Handle the webhook
         const result = await strapi
           .service("api::order.stripe")
-          .handleStripeWebhook(ctx.request.body, signature);
+          .handleStripeWebhook(unparsedBody, signature);
 
         return result;
       } catch (err) {
+        console.error("Webhook error:", err);
         ctx.throw(400, err.message);
       }
     },

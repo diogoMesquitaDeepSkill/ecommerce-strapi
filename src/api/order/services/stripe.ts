@@ -45,7 +45,6 @@ export default factories.createCoreService(
         const locale = order.orderItems[0]?.product?.locale || "pt";
 
         const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
           line_items: lineItems,
           mode: "payment",
           locale: locale, // Set Stripe checkout locale
@@ -53,7 +52,7 @@ export default factories.createCoreService(
           cancel_url: `${process.env.FRONTEND_URL}/${locale}/order/canceled/${order.accessToken}`,
           customer_email: order.email,
           metadata: {
-            orderId: order.id.toString(),
+            orderId: order.documentId.toString(),
             accessToken: order.accessToken,
             locale: locale,
           },
@@ -73,13 +72,31 @@ export default factories.createCoreService(
 
       let event;
 
+      console.log('handling..')
+
       try {
+        // Ensure requestBody is a Buffer or string for signature verification
+        const rawBody = Buffer.isBuffer(requestBody) 
+          ? requestBody 
+          : typeof requestBody === 'string' 
+            ? Buffer.from(requestBody, 'utf8')
+            : Buffer.from(JSON.stringify(requestBody), 'utf8');
+
+        console.log("Stripe webhook processing:", {
+          originalBodyType: typeof requestBody,
+          rawBodyType: typeof rawBody,
+          isBuffer: Buffer.isBuffer(rawBody),
+          signatureLength: signature?.length || 0,
+          hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET
+        });
+
         event = stripe.webhooks.constructEvent(
-          requestBody,
+          rawBody,
           signature,
           process.env.STRIPE_WEBHOOK_SECRET!
         );
       } catch (err) {
+        console.error("Stripe webhook construction error:", err);
         throw new Error(`Webhook Error: ${err.message}`);
       }
 
