@@ -1,10 +1,10 @@
 export const emailTemplates = {
   pt: {
     orderConfirmation: {
-      subject: "Confirmação da Encomenda - A Sua Encomenda Foi Recebida",
+      subject: "Confirmação da Encomenda - Pagamento Recebido",
       greeting: "Cara/Caro {name},",
       message:
-        "Obrigada/o pela sua encomenda! Recebemos a sua encomenda e está a ser processada.",
+        "Obrigada/o pela sua encomenda! Recebemos o seu pagamento e a sua encomenda está a ser processada.",
       orderDetails: "Detalhes da Encomenda",
       orderNumber: "Número da Encomenda",
       orderDate: "Data da Encomenda",
@@ -13,7 +13,7 @@ export const emailTemplates = {
       product: "Produto",
       price: "Preço",
       shippingAddress: "Morada de Entrega",
-      footer: "Enviaremos um email assim que a sua encomenda for expedida.",
+      footer: "Enviaremos os produtos nos próximos dias e receberá um email com o link de rastreamento assim que a sua encomenda for expedida.",
       contactInfo:
         "Se tiver alguma dúvida, entre em contacto connosco através do nosso website.",
       website: "Visite o nosso website",
@@ -40,10 +40,10 @@ export const emailTemplates = {
   },
   en: {
     orderConfirmation: {
-      subject: "Order Confirmation - Your Order Has Been Received",
+      subject: "Order Confirmation - Payment Received",
       greeting: "Dear {name},",
       message:
-        "Thank you for your order! We have received your order and it is being processed.",
+        "Thank you for your order! We have received your payment and your order is being processed.",
       orderDetails: "Order Details",
       orderNumber: "Order Number",
       orderDate: "Order Date",
@@ -52,7 +52,7 @@ export const emailTemplates = {
       product: "Product",
       price: "Price",
       shippingAddress: "Shipping Address",
-      footer: "We will send you an email once your order has been shipped.",
+      footer: "We will ship the products in the next few days and you will receive an email with the tracking link once your order has been shipped.",
       contactInfo:
         "If you have any questions, please contact us through our website.",
       website: "Visit our website",
@@ -78,10 +78,10 @@ export const emailTemplates = {
   },
   fr: {
     orderConfirmation: {
-      subject: "Confirmation de Commande - Votre Commande a Été Reçue",
+      subject: "Confirmation de Commande - Paiement Reçu",
       greeting: "Cher/Chère {name},",
       message:
-        "Merci pour votre commande ! Nous avons reçu votre commande et elle est en cours de traitement.",
+        "Merci pour votre commande ! Nous avons reçu votre paiement et votre commande est en cours de traitement.",
       orderDetails: "Détails de la Commande",
       orderNumber: "Numéro de Commande",
       orderDate: "Date de Commande",
@@ -91,7 +91,7 @@ export const emailTemplates = {
       price: "Prix",
       shippingAddress: "Adresse de Livraison",
       footer:
-        "Nous vous enverrons un email dès que votre commande sera expédiée.",
+        "Nous expédierons les produits dans les prochains jours et vous recevrez un email avec le lien de suivi dès que votre commande sera expédiée.",
       contactInfo:
         "Si vous avez des questions, veuillez nous contacter via notre site web.",
       website: "Visitez notre site web",
