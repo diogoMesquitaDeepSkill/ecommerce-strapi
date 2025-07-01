@@ -132,32 +132,5 @@ export default factories.createCoreController(
         ctx.throw(400, err.message);
       }
     },
-
-    async testEmail(ctx) {
-      try {
-        console.log("Testing email service...");
-
-        // Test if email service is available
-        if (!strapi.plugins.email.services.email) {
-          throw new Error("Email service not available");
-        }
-
-        // Test basic email sending
-        await strapi.plugins.email.services.email.send({
-          to: "test@example.com",
-          subject: "Test Email",
-          html: "<h1>Test Email</h1><p>This is a test email from Strapi.</p>",
-        });
-
-        return { success: true, message: "Test email sent successfully" };
-      } catch (error) {
-        console.error("Email test failed:", error);
-        return {
-          success: false,
-          error: error.message,
-          stack: error.stack,
-        };
-      }
-    },
   })
 );

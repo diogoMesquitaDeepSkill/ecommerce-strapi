@@ -56,6 +56,13 @@ export default factories.createCoreService(
             accessToken: order.accessToken,
             locale: locale,
           },
+          payment_intent_data: {
+            metadata: {
+              orderId: order.documentId.toString(),
+              accessToken: order.accessToken,
+              locale: locale,
+            },
+          },
         });
 
         return session;
@@ -100,7 +107,7 @@ export default factories.createCoreService(
         throw new Error(`Webhook Error: ${err.message}`);
       }
 
-      if (event.type === "checkout.session.completed") {
+      if (event.type === "payment_intent.succeeded") {
         const session = event.data.object;
 
         // Update the order using accessToken for better security
@@ -108,9 +115,9 @@ export default factories.createCoreService(
           documentId: session.metadata.orderId,
           data: {
             standing: "paid",
-            stripeId: session.id,
           },
         });
+
 
         // Note: The email will be sent automatically by the lifecycle hook
         // when the standing is updated to "paid"
